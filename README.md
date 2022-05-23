@@ -1,164 +1,51 @@
 # Shazs24.github.io
 Мой сайт
-import random
-HANGMANPICS = ['''
-
-+---+
- |   |
-     |
-     |
-     |
-     |
-=========''','''
-
-     +---+
-     |   |
-     O   |
-         |
-         |
-         |
-  =========''','''
+var words = ["программа", "катастофа", "макака", "прекрасный", "динозавр", "компьютер", "оладушек", "индекс",
+"школа", "интроверт", "вертолёт", "институт", "природа", "алфавит", "мумия", "почемучка", "верба", "гомодрил", "куратор", "поле",
+"исполнитель", "закзчик", "альтернатива", "кавычки", "строка", "ноль", "животноводство", "абсолютный"];
+var word = words[Math.floor(Math.random()*words.length)];
  
-     +---+
-     |   |
-     O   |
-     |   |
-         |
-         |
-  =========''','''
+var answerArray = [];
+for (var i = 0; i < word.length; i++) {
+  answerArray[i] = "_";
+}
  
-     +---+
-     |   |
-      O   |
-    /|   |
-         |
-         |
-  =========''','''
+var remainingLetters = word.length;
+var motion = 6;// или motion =word.length + 6;
+var isHit = false;
+while ((remainingLetters > 0) && (motion > 0)) {
+  alert(answerArray.join(" "));
+  var guess = prompt("Угадайте букву или нажмите Отмена для выхода из игры");
+  guess = guess.toLowerCase();
+  if (guess === null) {
+    break;
+    } else if (guess.length !== 1) {
+     alert("Пожалуйста, введите только одну букву");
+  } else {
+    //Обновляем состояние игры
+  for (var j = 0; j < word.length; j ++) {
+    var letterWasEntered = answerArray[j] === guess;
+    if (letterWasEntered) {
+        alert("Вы уже вводили эту букву");
+        break;
+    } if (word[j] === guess) {
+    answerArray[j] = guess;
+    remainingLetters--;
+    isHit = true;
+    
+}
+    } if (!isHit) {
+            motion--;
+            alert("У Вас осталось "  + motion + " попыток");
+            if(motion === 0) {
+                alert("Ваши попытки закончились");
+                break;
+  }
+  }
+}
+}
  
-     +---+
-     |   |
-     O   |
-    /|\  |
-         |
-         |
-  =========''','''
  
-     +---+
-     |   |
-     O   |
-    /|\  |
-    /    |
-         |
-  =========''','''
- 
-     +---+
-     |   |
-     O   |
-    /|\  |
-    / \  |
-         |
-  =========''']
- 
-  words = 'муравей бабуин барсук медведь бобр верблюд 
-кошка моллюск кобра пума койот ворона олень собака осел 
-утка орел хорек лиса лягушка коза гусь ястреб ящерица лама 
-моль обезьяна лось мышь мул тритон выдра сова панда попугай 
-голубь питон кролик баран крыса носорог лосось акула змея 
-паук аист лебедь тигр жаба форель индейка черепаха ласка 
-кит волк вомбат зебра'.split()
- 
-  def getRandomWord(wordList):
-      #Эта функция возвращает случайное слово, которое выбирает из заранее 
-созданного списка
-      wordIndex = random.randint(0, len(wordList) - 1)
-      return wordList[wordIndex]
- 
-  def displayBoard(HANGMANPICS, missedletters, correctLetters,secretWord):
-      print(HANGMANPICS[len(missedLetters)])
-      print()
+  alert(answerArray.join(" "));
+  alert("Было загадано слово " + word);
   
-      print('Неправильные буквы:', end=' ')
-      for letter in missedLetters:
-          print(letter, end=' ')
-      print()
- 
-      blanks = '*'*len(secretWord)
-      #Заменяем звездочки на правильно угаданные буквы
-      for i in range(len(secretWord)):
-          if secretWord[i] in correctLetters:
-              blanks = blanks[:i] + secretWord[i] + blanks[i+1:]
-      #Показываем загаданное слово с пробелами между букв
-      for letter in blanks: 
-          print(letter, end=' ')
-      print()
- 
-  def getGuess(alreadyGuessed):
-      #Возвращает букву, которую ввел игрок. Эта функция проверяет, что введена
- буква, а не какой-то другой символ
-      while True:
-      print('Введите букву')
-      guess = input()
-      guess = guess.lower()
-      if len(guess) != 1:
-          print('Ваша буква:')
-      elif guess in alreadyGuessed:
-          print ('Вы уже пробовали эту букву. Выберите другую')
-      elif guess not in 'ёйцукенгшщзхъфывапролджэячсмитьбю':
-          print('Пожалуйста, введите букву кириллицы')
-      else:
-          return guess
-
- def playAgain():
-     #Эта функция возвращает True если игрок решит сыграть еще раз. 
-В противном случае возвращается False
-     print('Хотите попробовать еще раз? ("Да" или "Нет")')
-     return input().lower().startswith('д')
-
- print('В И С Е Л И Ц А')
- missedLetters = ''
- correctLetters = ''
- secretWord = getRandomWord(words)
- gameIsDone = False
-
- while True:
-     displayBoard(HANGMANPICS, missedLetters, correctLetters, secretWord)
-
-     #Вычисляем количество букв, которые ввел игрок
-
-     guess = getGuess(missedLetters+correctLetters)
-
-     if guess in secretWord:
-         correctLetters = correctLetters + guess
-
-         #Проверка условия победы игрока
-         foundAllLetters = True
-         for i in range(len(secretWord)):
-             if secretWord[i] not in correctLetters:
-                 foundAllLetters = False
-                break
-         if foundAllLetters:
-             print('Превосходно! Было загадано слово "'+secretWord+'"
-! Вы победили!')
-
-             gameIsDone = True
-     else:
-         missedLetters = missedLetters+guess
-
-         #Проверка условия проигрыша игрока
-         if len(missedLetters) == len(HANGMANPICS) - 1:
-             displayBoard(HANGMANPICS, missedLetters, correctLetters, 
-secretWord)
-             print('У вас не осталось попыток!\nПосле '+str(len(missedLetters))
-+' ошибок и '+str(len(correctLetters))+'угаданных букв. Загаданное слово:'
-+secretWord+'"')
-             gameIsDone = True
-    # Спрашиваем, хочет ли игрок сыграть еще раз.
-
-     if gameIsDone:
-         if playAgain():
-             missedLetters = ''
-             correctLetters = ''
-             gameIsDone = False
-             secretWord = getRandomWord(words)
-     else:
-         break
